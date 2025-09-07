@@ -28,7 +28,7 @@
       theme: {
         extend: {
           colors: {
-            'land-green': '#22C55E', // Changed from land-yellow (#FFC107) to green (#22C55E)
+            'land-green': '#22C55E',
             'land-teal': '#00CED1',
             'land-dark-teal': '#008B8B',
             'land-offwhite': '#FFF8E1',
@@ -83,8 +83,8 @@
               '100%': { opacity: '1', transform: 'rotateY(0)' },
             },
             glowLine: {
-              '0%, 100%': { boxShadow: '0 0 5px rgba(34, 197, 94, 0.4)' }, // Updated to green
-              '50%': { boxShadow: '0 0 15px rgba(255, 87, 34, 0.8)' }, // Kept orange for contrast
+              '0%, 100%': { boxShadow: '0 0 5px rgba(34, 197, 94, 0.4)' },
+              '50%': { boxShadow: '0 0 15px rgba(255, 87, 34, 0.8)' },
             },
             rotateIn: {
               '0%': { opacity: '0', transform: 'rotate(10deg) scale(0.8)' },
@@ -96,7 +96,7 @@
             },
             highlight: {
               '0%': { backgroundColor: 'transparent' },
-              '50%': { backgroundColor: 'rgba(34, 197, 94, 0.3)' }, // Updated to green
+              '50%': { backgroundColor: 'rgba(34, 197, 94, 0.3)' },
               '100%': { backgroundColor: 'transparent' },
             },
           },
@@ -105,29 +105,49 @@
     };
   </script>
   <style>
-   .animate-section {
-  opacity: 0;
-  will-change: opacity, transform;
-}
-
-.animate-fade {
-  animation: fadeIn 1s forwards;
-}
-
-.animate-slide {
-  animation: slideIn 1s forwards;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-@keyframes slideIn {
-  from { transform: translateY(50px); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
-}
-
+    .animate-section {
+      opacity: 0;
+      will-change: opacity, transform;
+    }
+    .animate-fade {
+      animation: fadeIn 1s forwards;
+    }
+    .animate-slide {
+      animation: slideIn 1s forwards;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    @keyframes slideIn {
+      from { transform: translateY(50px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    /* Hamburger Animation */
+    #mobile-menu.active .bar:nth-child(1) {
+      transform: translateY(8px) rotate(45deg);
+    }
+    #mobile-menu.active .bar:nth-child(2) {
+      opacity: 0;
+    }
+    #mobile-menu.active .bar:nth-child(3) {
+      transform: translateY(-8px) rotate(-45deg);
+    }
+    /* Mobile Menu Animation */
+    #nav-menu {
+      transition: opacity 0.3s ease, transform 0.3s ease;
+      transform: translateY(-10px);
+      opacity: 0;
+    }
+    #nav-menu.active {
+      transform: translateY(0);
+      opacity: 1;
+      display: block;
+    }
+    /* Smooth scrolling */
+    html {
+      scroll-behavior: smooth;
+    }
     @media (prefers-reduced-motion: reduce) {
       .animate-section, .animate-fade-slide-up, .animate-fade-in, .animate-pulse-dot, .animate-slide-in-right,
       .animate-bounce-in, .animate-flip-in, .animate-slide-in-left, .animate-slide-in-center, .animate-glow-line,
@@ -137,6 +157,11 @@
         opacity: 1 !important;
         background-color: transparent !important;
       }
+      #nav-menu, #nav-menu.active {
+        transition: none !important;
+        transform: none !important;
+        opacity: 1 !important;
+      }
     }
   </style>
 </head>
@@ -144,23 +169,40 @@
   <!-- Navigation -->
   <nav class="sticky top-0 bg-black z-50 py-4">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 flex justify-between items-center">
-      <a href="#" class="text-2xl font-bold text-land-green">$LAND</a> <!-- Changed from land-yellow -->
-      <ul class="flex space-x-6">
-        <li><a href="#about" class="text-gray-300 hover:text-land-green">About</a></li> <!-- Changed from land-yellow -->
-        <li><a href="#tokenomics" class="text-gray-300 hover:text-land-green">Tokenomics</a></li> <!-- Changed from land-yellow -->
-        <li><a href="#roadmap" class="text-gray-300 hover:text-land-green">Roadmap</a></li> <!-- Changed from land-yellow -->
-        <li><a href="#how" class="text-gray-300 hover:text-land-green">How to Buy</a></li> <!-- Changed from land-yellow -->
+      <!-- Logo -->
+      <a href="#" class="text-2xl font-bold text-land-green">$LAND</a>
+      <!-- Desktop Menu -->
+      <ul class="hidden md:flex space-x-6">
+        <li><a href="#about" class="text-gray-300 hover:text-land-green">About</a></li>
+        <li><a href="#tokenomics" class="text-gray-300 hover:text-land-green">Tokenomics</a></li>
+        <li><a href="#roadmap" class="text-gray-300 hover:text-land-green">Roadmap</a></li>
+        <li><a href="#how" class="text-gray-300 hover:text-land-green">How to Buy</a></li>
+      </ul>
+      <!-- Hamburger Button -->
+      <button class="md:hidden text-land-green focus:outline-none focus:ring-2 focus:ring-land-green/50" id="mobile-menu" role="button" aria-label="Toggle navigation" aria-expanded="false">
+        <span class="bar w-6 h-0.5 bg-land-green mb-1.5 transition-transform duration-300"></span>
+        <span class="bar w-6 h-0.5 bg-land-green mb-1.5 transition-transform duration-300"></span>
+        <span class="bar w-6 h-0.5 bg-land-green transition-transform duration-300"></span>
+      </button>
+    </div>
+    <!-- Mobile Menu -->
+    <div class="md:hidden hidden bg-black w-full absolute top-16 left-0 shadow-lg z-50" id="nav-menu">
+      <ul class="flex flex-col items-center py-4">
+        <li class="w-full text-center"><a href="#about" class="block py-2 text-gray-300 hover:text-land-green text-lg">About</a></li>
+        <li class="w-full text-center"><a href="#tokenomics" class="block py-2 text-gray-300 hover:text-land-green text-lg">Tokenomics</a></li>
+        <li class="w-full text-center"><a href="#roadmap" class="block py-2 text-gray-300 hover:text-land-green text-lg">Roadmap</a></li>
+        <li class="w-full text-center"><a href="#how" class="block py-2 text-gray-300 hover:text-land-green text-lg">How to Buy</a></li>
       </ul>
     </div>
   </nav>
 
   <!-- Hero Section -->
-  <header role="banner" class="min-h-[calc(100vh-4rem)] flex items-center px-4 sm:px-6 bg-gradient-to-b from-land-green/10 to-black section"> <!-- Changed from land-yellow/10 -->
+  <header role="banner" class="min-h-[calc(100vh-4rem)] flex items-center px-4 sm:px-6 bg-gradient-to-b from-land-green/10 to-black section">
     <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-12 items-center">
       <!-- Text -->
       <div class="text-center md:text-left animate-section" data-animation="fade-slide-up" data-delay="0.1s">
         <h1 class="text-4xl sm:text-5xl md:text-6xl font-extrabold leading-tight">
-          The Greatest Investment <span class="bg-gradient-to-r from-land-green via-green-400 to-green-600 bg-clip-text text-transparent">$LAND</span> <!-- Changed from land-yellow -->
+          The Greatest Investment <span class="bg-gradient-to-r from-land-green via-green-400 to-green-600 bg-clip-text text-transparent">$LAND</span>
         </h1>
         <p class="mt-4 text-base sm:text-lg text-gray-300 max-w-lg mx-auto md:mx-0">
           $LAND is a BNB Smart Chain memecoin built on the timeless truth: 
@@ -169,33 +211,33 @@
         </p>
         <!-- CTA Buttons -->
         <div class="mt-6 flex flex-wrap justify-center md:justify-start items-center gap-4">
-          <a href="https://[ActualHomieFunURL].com" target="_blank" rel="noopener noreferrer" class="rounded-xl bg-land-green px-6 py-3 font-bold text-black shadow-lg hover:bg-land-orange hover:scale-110 transition transform duration-150 text-base"> <!-- Changed from land-yellow -->
+          <a href="https://[ActualHomieFunURL].com" target="_blank" rel="noopener noreferrer" class="rounded-xl bg-land-green px-6 py-3 font-bold text-black shadow-lg hover:bg-land-orange hover:scale-110 transition transform duration-150 text-base">
             🚀 Buy on Homie.fun
           </a>
-          <a href="#about" class="rounded-xl border border-land-green/40 px-6 py-3 font-semibold hover:border-land-orange hover:scale-110 transition transform duration-150 text-base"> <!-- Changed from land-yellow/40 -->
+          <a href="#about" class="rounded-xl border border-land-green/40 px-6 py-3 font-semibold hover:border-land-orange hover:scale-110 transition transform duration-150 text-base">
             Learn More
           </a>
         </div>
         <!-- Social Links -->
         <div class="mt-4 flex justify-center md:justify-start gap-4">
-          <a href="https://t.me/[ActualTelegramHandle]" target="_blank" rel="noopener noreferrer" class="text-land-teal hover:text-land-dark-teal hover:scale-110 transition transform duration-150" aria-label="Join $LAND on Telegram"> <!-- Replace with actual Telegram URL -->
+          <a href="https://t.me/[ActualTelegramHandle]" target="_blank" rel="noopener noreferrer" class="text-land-teal hover:text-land-dark-teal hover:scale-110 transition transform duration-150" aria-label="Join $LAND on Telegram">
             <i class="fab fa-telegram-plane text-2xl"></i>
           </a>
-          <a href="https://x.com/[ActualTwitterHandle]" target="_blank" rel="noopener noreferrer" class="text-land-teal hover:text-land-dark-teal hover:scale-110 transition transform duration-150" aria-label="Follow $LAND on Twitter/X"> <!-- Replace with actual Twitter/X URL -->
+          <a href="https://x.com/[ActualTwitterHandle]" target="_blank" rel="noopener noreferrer" class="text-land-teal hover:text-land-dark-teal hover:scale-110 transition transform duration-150" aria-label="Follow $LAND on Twitter/X">
             <i class="fab fa-x-twitter text-2xl"></i>
           </a>
         </div>
         <!-- Contract + Copy Button -->
         <div class="mt-6 flex justify-center md:justify-start items-center gap-3">
-          <span id="contractAddr" onclick="copyAddress()" class="font-mono text-land-green text-sm sm:text-base break-all cursor-pointer">0x[YourActualContractAddress]</span> <!-- Changed from land-yellow -->
-          <button onclick="copyAddress()" aria-label="Copy contract address" class="bg-land-green hover:bg-land-orange text-black px-4 py-2 rounded-lg text-sm font-semibold shadow hover:scale-110 transition transform duration-150"> <!-- Changed from land-yellow -->
+          <span id="contractAddr" onclick="copyAddress()" class="font-mono text-land-green text-sm sm:text-base break-all cursor-pointer">0x[YourActualContractAddress]</span>
+          <button onclick="copyAddress()" aria-label="Copy contract address" class="bg-land-green hover:bg-land-orange text-black px-4 py-2 rounded-lg text-sm font-semibold shadow hover:scale-110 transition transform duration-150">
             Copy
           </button>
         </div>
       </div>
       <!-- Image -->
       <div class="relative flex justify-center animate-section" data-animation="bounce-in" data-delay="0.2s">
-        <img src="./land.jpg" sizes="(max-width: 640px) 300px, 600px" alt="Open land representing $LAND memecoin" class="rounded-2xl shadow-2xl max-h-[300px] sm:max-h-[450px] object-cover w-full" loading="lazy"> <!-- Replace with actual image URLs -->
+        <img src="./land.jpg" sizes="(max-width: 640px) 300px, 600px" alt="Open land representing $LAND memecoin" class="rounded-2xl shadow-2xl max-h-[300px] sm:max-h-[450px] object-cover w-full" loading="lazy">
       </div>
     </div>
   </header>
@@ -203,7 +245,7 @@
   <!-- About Section -->
   <section id="about" role="region" aria-labelledby="about-heading" class="max-w-4xl mx-auto py-16 px-4 sm:px-6 text-center section">
     <div class="animate-section" data-animation="fade-in" data-delay="0.1s">
-      <h2 id="about-heading" class="text-2xl sm:text-3xl font-bold text-land-green mb-6">About $LAND</h2> <!-- Changed from land-yellow -->
+      <h2 id="about-heading" class="text-2xl sm:text-3xl font-bold text-land-green mb-6">About $LAND</h2>
       <p class="text-base sm:text-lg text-gray-300 leading-relaxed">
         $LAND is a community-driven memecoin on the BNB Smart Chain.
         Inspired by the greatest investment of all time — land itself 🌍.
@@ -213,20 +255,20 @@
   </section>
 
   <!-- Tokenomics Section -->
-  <section id="tokenomics" class="bg-gradient-to-r from-land-green/10 via-black to-land-green/10 py-16 px-4 sm:px-6 section"> <!-- Changed from land-yellow/10 -->
+  <section id="tokenomics" class="bg-gradient-to-r from-land-green/10 via-black to-land-green/10 py-16 px-4 sm:px-6 section">
     <div class="max-w-5xl mx-auto text-center">
-      <h2 class="text-2xl sm:text-3xl font-bold text-land-green mb-10 animate-section" data-animation="fade-in" data-delay="0.1s">Tokenomics</h2> <!-- Changed from land-yellow -->
+      <h2 class="text-2xl sm:text-3xl font-bold text-land-green mb-10 animate-section" data-animation="fade-in" data-delay="0.1s">Tokenomics</h2>
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
         <div class="p-6 bg-gray-900 rounded-2xl shadow-lg hover:scale-105 transition transform duration-300 animate-section" data-animation="flip-in" data-delay="0.1s">
-          <h3 class="text-lg sm:text-xl font-semibold mb-2 text-land-green">Total Supply</h3> <!-- Changed from land-yellow -->
+          <h3 class="text-lg sm:text-xl font-semibold mb-2 text-land-green">Total Supply</h3>
           <p class="text-xl sm:text-2xl text-land-offwhite">1,000,000,000 $LAND</p>
         </div>
         <div class="p-6 bg-gray-900 rounded-2xl shadow-lg hover:scale-105 transition transform duration-300 animate-section" data-animation="flip-in" data-delay="0.2s">
-          <h3 class="text-lg sm:text-xl font-semibold mb-2 text-land-green">Liquidity</h3> <!-- Changed from land-yellow -->
+          <h3 class="text-lg sm:text-xl font-semibold mb-2 text-land-green">Liquidity</h3>
           <p class="text-xl sm:text-2xl text-land-offwhite">100% Locked 🔒</p>
         </div>
         <div class="p-6 bg-gray-900 rounded-2xl shadow-lg hover:scale-105 transition transform duration-300 animate-section" data-animation="flip-in" data-delay="0.3s">
-          <h3 class="text-lg sm:text-xl font-semibold mb-2 text-land-green">Taxes</h3> <!-- Changed from land-yellow -->
+          <h3 class="text-lg sm:text-xl font-semibold mb-2 text-land-green">Taxes</h3>
           <p class="text-xl sm:text-2xl text-land-offwhite">1% Buy / Sell</p>
         </div>
       </div>
@@ -236,15 +278,15 @@
   <!-- Roadmap Section -->
   <section id="roadmap" class="bg-gray-900 py-16 px-4 sm:px-6 section">
     <div class="max-w-6xl mx-auto text-center">
-      <h2 class="text-2xl sm:text-3xl font-bold text-land-green mb-12 animate-section" data-animation="fade-in" data-delay="0.1s">Roadmap</h2> <!-- Changed from land-yellow -->
+      <h2 class="text-2xl sm:text-3xl font-bold text-land-green mb-12 animate-section" data-animation="fade-in" data-delay="0.1s">Roadmap</h2>
       <div class="relative flex flex-col md:flex-row items-center justify-between">
         <!-- Horizontal bridge line -->
-        <div class="absolute hidden md:block top-16 left-0 right-0 h-1 bg-land-green/40 animate-section" data-animation="glow-line" data-delay="0.1s"></div> <!-- Changed from land-yellow/40 -->
+        <div class="absolute hidden md:block top-16 left-0 right-0 h-1 bg-land-green/40 animate-section" data-animation="glow-line" data-delay="0.1s"></div>
         <!-- Phase 1 -->
         <div class="relative z-10 flex-1 text-center md:text-left animate-section" data-animation="slide-in-left" data-delay="0.1s">
           <div class="bg-gray-800 p-6 rounded-2xl shadow-lg">
             <div class="text-4xl mb-2">✅</div>
-            <h3 class="text-lg sm:text-xl font-semibold text-land-green">Phase 1: Launch & Community</h3> <!-- Changed from land-yellow -->
+            <h3 class="text-lg sm:text-xl font-semibold text-land-green">Phase 1: Launch & Community</h3>
             <ul class="mt-3 text-base sm:text-lg text-gray-300 space-y-1">
               <li>Fair launch on Homie.fun</li>
               <li>Website + socials live</li>
@@ -257,9 +299,9 @@
         <div class="relative z-10 flex-1 mt-12 md:mt-0 text-center animate-section" data-animation="slide-in-center" data-delay="0.2s">
           <div class="bg-gray-800 p-6 rounded-2xl shadow-lg">
             <div class="text-4xl mb-2">🌍</div>
-            <h3 class="text-lg sm:text-xl font-semibold text-land-green">Phase 2: Growth & Exposure</h3> <!-- Changed from land-yellow -->
+            <h3 class="text-lg sm:text-xl font-semibold text-land-green">Phase 2: Growth & Exposure</h3>
             <ul class="mt-3 text-base sm:text-lg text-gray-300 space-y-1">
-              <li>Meme &  Marketing campaigns</li>
+              <li>Meme & Marketing campaigns</li>
               <li>Important Listings</li>
               <li>Reach 2,000+ holders</li>
             </ul>
@@ -269,10 +311,9 @@
         <div class="relative z-10 flex-1 mt-12 md:mt-0 text-center md:text-right animate-section" data-animation="slide-in-right" data-delay="0.3s">
           <div class="bg-gray-800 p-6 rounded-2xl shadow-lg">
             <div class="text-4xl mb-2">🏆</div>
-            <h3 class="text-lg sm:text-xl font-semibold text-land-green">Phase 3: Expansion</h3> <!-- Changed from land-yellow -->
+            <h3 class="text-lg sm:text-xl font-semibold text-land-green">Phase 3: Expansion</h3>
             <ul class="mt-3 text-base sm:text-lg text-gray-300 space-y-1">
               <li>More marketing, partnerships & collabs</li>
-              <li></li>
               <li>Surprise utility feature</li>
             </ul>
           </div>
@@ -284,40 +325,40 @@
   <!-- How to Buy Section -->
   <section id="how" class="py-16 bg-black section">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 text-center animate-section" data-animation="fade-in" data-delay="0.1s">
-      <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold text-land-green">How to Buy</h2> <!-- Changed from land-yellow -->
+      <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold text-land-green">How to Buy</h2>
       <p class="mt-3 text-base sm:text-lg text-gray-300">3 simple steps to own your piece of $LAND:</p>
     </div>
     <div class="mt-10 grid gap-6 sm:grid-cols-3 max-w-6xl mx-auto px-4 sm:px-6">
       <div class="p-6 bg-gray-900 rounded-2xl shadow-lg animate-section" data-animation="bounce-in" data-delay="0.1s">
-        <h3 class="text-lg font-semibold text-land-green">1. Wallet</h3> <!-- Changed from land-yellow -->
+        <h3 class="text-lg font-semibold text-land-green">1. Wallet</h3>
         <p class="mt-3 text-base text-gray-300">Download MetaMask or TrustWallet, switch to BNB Smart Chain.</p>
       </div>
       <div class="p-6 bg-gray-900 rounded-2xl shadow-lg animate-section" data-animation="bounce-in" data-delay="0.2s">
-        <h3 class="text-lg font-semibold text-land-green">2. Homie.fun</h3> <!-- Changed from land-yellow -->
+        <h3 class="text-lg font-semibold text-land-green">2. Homie.fun</h3>
         <p class="mt-3 text-base text-gray-300">Go to 
           <a href="https://[ActualHomieFunURL].com" target="_blank" rel="noopener noreferrer" class="text-land-teal hover:text-land-dark-teal hover:underline" aria-label="Visit Homie.fun to buy $LAND">Homie.fun</a>, 
-          paste the contract, and swap BNB → $LAND.</p> <!-- Replace with actual Homie.fun URL -->
+          paste the contract, and swap BNB → $LAND.</p>
       </div>
       <div class="p-6 bg-gray-900 rounded-2xl shadow-lg animate-section" data-animation="bounce-in" data-delay="0.3s">
-        <h3 class="text-lg font-semibold text-land-green">3. Hold</h3> <!-- Changed from land-yellow -->
+        <h3 class="text-lg font-semibold text-land-green">3. Hold</h3>
         <p class="mt-3 text-base text-gray-300">That’s it. You’re officially a LANDLORD 🌍.</p>
       </div>
     </div>
   </section>
 
   <!-- Back to Top Button -->
-  <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="fixed bottom-6 left-6 bg-land-green text-black px-4 py-2 rounded-full shadow-lg hover:bg-land-orange text-sm font-semibold animate-pulse-continuous" aria-label="Scroll to top"> <!-- Changed from land-yellow -->
+  <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="fixed bottom-6 left-6 bg-land-green text-black px-4 py-2 rounded-full shadow-lg hover:bg-land-orange text-sm font-semibold animate-pulse-continuous" aria-label="Scroll to top">
     ↑ Top
   </button>
 
   <!-- Footer -->
-  <footer class="bg-black py-6 text-center text-gray-400 border-t border-land-green/20 section"> <!-- Changed from land-yellow/20 -->
+  <footer class="bg-black py-6 text-center text-gray-400 border-t border-land-green/20 section">
     <div class="animate-section" data-animation="fade-in" data-delay="0.1s">
       <div class="flex justify-center gap-4 mb-2">
-        <a href="https://t.me/[ActualTelegramHandle]" target="_blank" rel="noopener noreferrer" class="text-land-teal hover:text-land-dark-teal hover:scale-110 transition transform duration-150" aria-label="Join $LAND on Telegram"> <!-- Replace with actual Telegram URL -->
+        <a href="https://t.me/[ActualTelegramHandle]" target="_blank" rel="noopener noreferrer" class="text-land-teal hover:text-land-dark-teal hover:scale-110 transition transform duration-150" aria-label="Join $LAND on Telegram">
           <i class="fab fa-telegram-plane text-xl"></i>
         </a>
-        <a href="https://x.com/[ActualTwitterHandle]" target="_blank" rel="noopener noreferrer" class="text-land-teal hover:text-land-dark-teal hover:scale-110 transition transform duration-150" aria-label="Follow $LAND on Twitter/X"> <!-- Replace with actual Twitter/X URL -->
+        <a href="https://x.com/[ActualTwitterHandle]" target="_blank" rel="noopener noreferrer" class="text-land-teal hover:text-land-dark-teal hover:scale-110 transition transform duration-150" aria-label="Follow $LAND on Twitter/X">
           <i class="fab fa-x-twitter text-xl"></i>
         </a>
       </div>
@@ -326,164 +367,113 @@
   </footer>
 
   <!-- Toast Notification -->
-  <div id="toast" class="hidden fixed bottom-6 right-6 bg-land-green text-black px-4 py-2 rounded-lg shadow-lg font-semibold animate-rotate-in"> <!-- Changed from land-yellow -->
+  <div id="toast" class="hidden fixed bottom-6 right-6 bg-land-green text-black px-4 py-2 rounded-lg shadow-lg font-semibold animate-rotate-in">
     ✅ Contract address copied!
   </div>
 
-  <!-- Analytics (Optional) -->
-  <!-- Replace G-XXXXXXXXXX with your Google Analytics Measurement ID -->
-  <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+  <!-- JavaScript for Scroll-Triggered Animations, Copy Address, and Navbar Toggle -->
   <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-XXXXXXXXXX');
-  </script> -->
-
-  <!-- JavaScript for Scroll-Triggered Animations and Copy Address -->
-  <script>
-    // Intersection Observer for scroll-triggered animations
- // Intersection Observer for scroll-triggered animations (excluding hero section)
- 
-function initScrollAnimations({
-  selector = '.animate-section',
-  defaultAnimation = 'fade-in',
-  threshold = 0.2,
-  rootMargin = '0px 0px -50px 0px',
-} = {}) {
-  const sections = document.querySelectorAll(selector);
-  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const heroSection = document.querySelector('header[role="banner"]');
-
-  // Set hero section elements to visible immediately
-  if (heroSection) {
-    const heroElements = heroSection.querySelectorAll('.animate-section');
-    heroElements.forEach((element) => {
-      element.style.opacity = '1';
-      // Optionally remove animation classes if not needed
-      const animation = element.dataset.animation;
-      if (animation) {
-        element.classList.remove(`animate-${animation}`);
-      }
-    });
-  }
-
-  if ('IntersectionObserver' in window && !prefersReducedMotion) {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting && entry.target instanceof Element) {
-            // Skip hero section elements
-            if (entry.target.closest('header[role="banner"]')) {
-              return;
-            }
-
-            const animation = entry.target.dataset.animation || defaultAnimation;
-            const delay = entry.target.dataset.delay || '0s';
-
-            if (!animation) {
-              console.warn(`No data-animation attribute on element:`, entry.target);
-              entry.target.style.opacity = '1';
-              return;
-            }
-
-            entry.target.style.animationDelay = delay;
-            entry.target.classList.add(`animate-${animation}`);
-          } else if (entry.target instanceof Element) {
-            const animation = entry.target.dataset.animation || defaultAnimation;
-            entry.target.classList.remove(`animate-${animation}`);
-          }
+    document.addEventListener("DOMContentLoaded", () => {
+      // --- Copy contract button ---
+      function copyAddress() {
+        const address = "0x[YourActualContractAddress]"; // Replace with real contract
+        navigator.clipboard.writeText(address).then(() => {
+          const popup = document.createElement("div");
+          popup.innerText = "Copied!";
+          popup.style.position = "fixed";
+          popup.style.bottom = "20px";
+          popup.style.left = "50%";
+          popup.style.transform = "translateX(-50%)";
+          popup.style.background = "#22C55E";
+          popup.style.color = "#fff";
+          popup.style.padding = "10px 20px";
+          popup.style.borderRadius = "8px";
+          popup.style.zIndex = "1000";
+          document.body.appendChild(popup);
+          setTimeout(() => popup.remove(), 2000);
         });
-      },
-      { threshold, rootMargin }
-    );
-
-    sections.forEach((section) => {
-      // Only observe elements outside the hero section
-      if (!section.closest('header[role="banner"]')) {
-        observer.observe(section);
       }
-    });
-  } else {
-    sections.forEach((section) => {
-      if (section instanceof Element) {
-        section.style.opacity = '1';
-      }
-    });
-  }
-}
+      window.copyAddress = copyAddress;
 
-// Initialize animations
-initScrollAnimations();
+      // --- Hamburger Menu Toggle ---
+      const mobileMenu = document.getElementById('mobile-menu');
+      const navMenu = document.getElementById('nav-menu');
+      mobileMenu.addEventListener('click', () => {
+        mobileMenu.classList.toggle('active');
+        navMenu.classList.toggle('active');
+        mobileMenu.setAttribute('aria-expanded', mobileMenu.classList.contains('active'));
+      });
+      document.querySelectorAll('#nav-menu a').forEach(link => {
+        link.addEventListener('click', () => {
+          mobileMenu.classList.remove('active');
+          navMenu.classList.remove('active');
+          mobileMenu.setAttribute('aria-expanded', 'false');
+        });
+      });
 
-document.addEventListener("DOMContentLoaded", () => {
-  // --- Copy contract button ---
-  function copyAddress() {
-    const address = "0x1234567890abcdef1234567890abcdef12345678"; // replace with real contract
-    navigator.clipboard.writeText(address).then(() => {
-      const popup = document.createElement("div");
-      popup.innerText = "Copied!";
-      popup.style.position = "fixed";
-      popup.style.bottom = "20px";
-      popup.style.left = "50%";
-      popup.style.transform = "translateX(-50%)";
-      popup.style.background = "#22C55E"; // Changed from #333 to green
-      popup.style.color = "#fff";
-      popup.style.padding = "10px 20px";
-      popup.style.borderRadius = "8px";
-      popup.style.zIndex = "1000";
-      document.body.appendChild(popup);
+      // --- Scroll Animations ---
+      function initScrollAnimations({
+        selector = '.animate-section',
+        defaultAnimation = 'fade-in',
+        threshold = 0.2,
+        rootMargin = '0px 0px -50px 0px',
+      } = {}) {
+        const sections = document.querySelectorAll(selector);
+        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const heroSection = document.querySelector('header[role="banner"]');
 
-      setTimeout(() => popup.remove(), 2000);
-    });
-  }
-  window.copyAddress = copyAddress; // make available globally
-
-  // --- Scroll animations ---
-  function initScrollAnimations() {
-    const sections = document.querySelectorAll(".animate-section");
-    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-    if ("IntersectionObserver" in window && !prefersReducedMotion) {
-      const observer = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((entry) => {
-            const animation = entry.target.dataset.animation || "fade";
-            const delay = entry.target.dataset.delay || "0s";
-
-            if (entry.isIntersecting) {
-              entry.target.style.animationDelay = delay;
-
-              // restart animation
-              entry.target.classList.remove(`animate-${animation}`);
-              void entry.target.offsetWidth; // reflow
-              entry.target.classList.add(`animate-${animation}`);
-
-              // make sure it's visible
-              entry.target.style.opacity = "1";
+        if (heroSection) {
+          const heroElements = heroSection.querySelectorAll('.animate-section');
+          heroElements.forEach((element) => {
+            element.style.opacity = '1';
+            const animation = element.dataset.animation;
+            if (animation) {
+              element.classList.remove(`animate-${animation}`);
+              void element.offsetWidth;
+              element.classList.add(`animate-${animation}`);
             }
           });
-        },
-        {
-          threshold: 0.2,
-          rootMargin: "0px 0px -50px 0px",
         }
-      );
 
-      sections.forEach((section) => {
-        if (!section.classList.contains("hero")) {
-          observer.observe(section);
+        if ('IntersectionObserver' in window && !prefersReducedMotion) {
+          const observer = new IntersectionObserver(
+            (entries) => {
+              entries.forEach((entry) => {
+                if (entry.isIntersecting && entry.target instanceof Element) {
+                  if (entry.target.closest('header[role="banner"]')) return;
+                  const animation = entry.target.dataset.animation || defaultAnimation;
+                  const delay = entry.target.dataset.delay || '0s';
+                  if (!animation) {
+                    console.warn(`No data-animation attribute on element:`, entry.target);
+                    entry.target.style.opacity = '1';
+                    return;
+                  }
+                  entry.target.style.animationDelay = delay;
+                  entry.target.classList.remove(`animate-${animation}`);
+                  void entry.target.offsetWidth;
+                  entry.target.classList.add(`animate-${animation}`);
+                  entry.target.style.opacity = '1';
+                } else if (entry.target instanceof Element) {
+                  const animation = entry.target.dataset.animation || defaultAnimation;
+                  entry.target.classList.remove(`animate-${animation}`);
+                }
+              });
+            },
+            { threshold, rootMargin }
+          );
+          sections.forEach((section) => {
+            if (!section.closest('header[role="banner"]')) {
+              observer.observe(section);
+            }
+          });
         } else {
-          section.style.opacity = "1"; // hero always visible
+          sections.forEach((section) => {
+            if (section instanceof Element) section.style.opacity = '1';
+          });
         }
-      });
-    } else {
-      sections.forEach((section) => (section.style.opacity = "1"));
-    }
-  }
-
-  initScrollAnimations();
-});
+      }
+      initScrollAnimations();
+    });
   </script>
 </body>
 </html>
